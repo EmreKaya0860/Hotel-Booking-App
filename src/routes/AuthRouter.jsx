@@ -16,9 +16,15 @@ const AuthRouter = () => {
         component={WelcomeScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="SignInScreen" component={SignInScreen} />
-      <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
-      <Stack.Screen name="VerificationScreen" component={VerificationScreen} />
+      <Stack.Screen name="SignInScreen" component={SignInScreen} 
+              options={{ headerShown: false }}
+              />
+      <Stack.Screen name="SignUpScreen" component={SignUpScreen}
+              options={{ headerShown: false }}
+              />
+      <Stack.Screen name="VerificationScreen" component={VerificationScreen}
+              options={{ headerShown: false }}
+              />
     </Stack.Navigator>
   );
 };
