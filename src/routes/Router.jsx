@@ -1,28 +1,32 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import MainRouter from './MainRouter';
-import AuthRouter from './AuthRouter';
+import { createStackNavigator } from "@react-navigation/stack";
+import MainRouter from "./MainRouter";
+import AuthRouter from "./AuthRouter";
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
+
 const Router = () => {
-    const user=true;
-    // autha gitmek için user= false 
-    // main gitmek için user= true
+  const user = true;
+  // autha gitmek için user= false
+  // main gitmek için user= true
   return (
-    <NavigationContainer>
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {user ? (
-        <Stack.Screen name="MainRouter" component={MainRouter} />
-      ) : (
-        <Stack.Screen name="AuthRouter" component={AuthRouter} />
-      )}
-    </Stack.Navigator>
-  </NavigationContainer>
-  )
-}
+    <SafeAreaView style={{ flex: 1 }}>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          {user ? (
+            <Stack.Screen name="MainRouter" component={MainRouter} />
+          ) : (
+            <Stack.Screen name="AuthRouter" component={AuthRouter} />
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaView>
+  );
+};
 
 export default Router;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});
