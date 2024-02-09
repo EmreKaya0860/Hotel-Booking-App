@@ -6,7 +6,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import HomeScreen from "../screens/HomeScreen";
 import BookingsScreen from "../screens/BookingsScreen";
-import NotificationScreen from "../screens/NotificationScreen";
+import FavoriteScreen from "../screens/FavoriteScreen";
 import AccountScreen from "../screens/AccountScreen";
 
 import { FontAwesome } from "@expo/vector-icons";
@@ -15,7 +15,7 @@ const Tab = createBottomTabNavigator();
 
 const MainRouter = () => {
   return (
-    <NavigationContainer>
+ 
       <Tab.Navigator
         screenOptions={{
           headerShown: false,
@@ -44,8 +44,8 @@ const MainRouter = () => {
           }}
         />
         <Tab.Screen
-          name="NotificationScreen"
-          component={NotificationScreen}
+          name="FavoriteScreen"
+          component={FavoriteScreen}
           options={{
             tabBarIcon: () => (
               <FontAwesome name="bell" size={30} color="#DFDEDE" />
@@ -64,7 +64,7 @@ const MainRouter = () => {
           }}
         />
       </Tab.Navigator>
-    </NavigationContainer>
+   
   );
 };
 
