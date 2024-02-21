@@ -43,7 +43,7 @@ const HotelDetailScreen = ({ navigation, route }) => {
     },
   ];
   const onHandlePress = (item) => {
-    navigation.navigate("ReservationStepsRouter", { itemprops: item });
+    navigation.navigate("ReservationStepsRouter");
     console.log(item.name);
   };
   return (

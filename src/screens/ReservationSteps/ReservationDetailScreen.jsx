@@ -98,7 +98,7 @@ const ReservationDetailScreen = ({ navigation }) => {
             <TextInput style={styles.infoInputStyle} placeholder="İlçe" />
             <TextInput
               style={styles.infoInputStyle}
-              placeholder="Telefon Numarası"
+              placeholder={t("reservationDetail.phoneInputLabel")}
             />
             <TextInput style={styles.infoInputStyle} placeholder="Tarih" />
 
