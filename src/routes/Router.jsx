@@ -11,11 +11,11 @@ import CombineMainAndReservationRouter from "./CombineMainAndReservationRouter";
 const Stack = createStackNavigator();
 
 const Router = () => {
-  const user = false;
+  const user = true;
   // autha gitmek için user= false
   // main gitmek için user= true
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           {user ? (
@@ -28,7 +28,7 @@ const Router = () => {
           )}
         </Stack.Navigator>
       </NavigationContainer>
-    </SafeAreaView>
+    </View>
   );
 };
 

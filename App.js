@@ -4,9 +4,5 @@ import "./i18n";
 import Router from "./src/routes/Router";
 
 export default function App() {
-  return (
-    <SafeAreaProvider>
-      <Router />
-    </SafeAreaProvider>
-  );
+  return <Router />;
 }

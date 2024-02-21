@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View ,Image} from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, Image } from "react-native";
+import React from "react";
 import MapView, { Marker } from "react-native-maps";
 import useLocation from "../../hooks/useLocation";
-const HotelLocation = ({latitude,longitude}) => {
-    const location = useLocation();
-    const initialRegion = location
+const HotelLocation = ({ latitude, longitude }) => {
+  const location = useLocation();
+  const initialRegion = location
     ? {
         latitude: location ? location.coords.latitude : 41.0082,
         longitude: location ? location.coords.longitude : 28.9784,
@@ -23,8 +23,8 @@ const HotelLocation = ({latitude,longitude}) => {
 
   return (
     <View style={styles.container}>
-        <Text style={styles.header}>Location</Text>
-     <MapView style={styles.map} initialRegion={initialRegion}>
+      <Text style={styles.header}>Location</Text>
+      <MapView style={styles.map} initialRegion={initialRegion}>
         {coordinate && (
           <Marker
             coordinate={coordinate}
@@ -54,43 +54,41 @@ const HotelLocation = ({latitude,longitude}) => {
           />
         </Marker>
       </MapView>
-  </View>
+    </View>
+  );
+};
 
-  )
-}
-
-export default HotelLocation
+export default HotelLocation;
 
 const styles = StyleSheet.create({
-    container: {
-        width: "100%",
-        height: 300,
-        borderRadius: 10,
-        padding: 20,
-        gap: 20,
-        marginBottom: 40,
-      },
-      infoBox: {
-        position: "absolute",
-        bottom: 70,
-        backgroundColor: "rgba(0, 195, 255, 0.8)",
-        width: "100%",
-        height: 160,
-        padding: 10,
-        gap: 10,
-      },
-      map: {
-        width: "100%",
-        height: "100%",
-        borderRadius: 10,
-      },
-      text: {
-        color: "white",
-        fontSize: 14,
-      },
-      header:{
-        fontSize: 20,
-        fontWeight: "bold",
-       
-    },
-})
+  container: {
+    width: "100%",
+    height: 300,
+    borderRadius: 10,
+    padding: 20,
+    gap: 20,
+    marginBottom: 110,
+  },
+  infoBox: {
+    position: "absolute",
+    bottom: 70,
+    backgroundColor: "rgba(0, 195, 255, 0.8)",
+    width: "100%",
+    height: 160,
+    padding: 10,
+    gap: 10,
+  },
+  map: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 10,
+  },
+  text: {
+    color: "white",
+    fontSize: 14,
+  },
+  header: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+});

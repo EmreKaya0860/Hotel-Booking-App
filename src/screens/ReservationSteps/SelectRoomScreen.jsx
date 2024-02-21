@@ -179,6 +179,7 @@ export default SelectRoomScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginVertical: 60,
   },
   header: {
     flexDirection: "row",

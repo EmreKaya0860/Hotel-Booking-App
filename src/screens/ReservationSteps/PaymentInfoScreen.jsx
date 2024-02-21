@@ -99,6 +99,7 @@ const PaymentInfoScreen = ({ navigation }) => {
             onChangeText={(text) => setCardNumber(text.replace(/\D/g, ""))}
             maxLength={16}
             value={cardNumber}
+            inputMode="numeric"
           />
           <View style={styles.expAndCVVContainer}>
             <TextInput
@@ -153,6 +154,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+    marginVertical: 60,
   },
   header: {
     flexDirection: "row",

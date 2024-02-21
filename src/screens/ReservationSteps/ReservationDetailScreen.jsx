@@ -126,7 +126,7 @@ export default ReservationDetailScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    marginVertical: 60,
   },
   header: {
     flexDirection: "row",

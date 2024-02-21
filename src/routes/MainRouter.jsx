@@ -5,7 +5,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../screens/HomeScreen";
 import BookingsScreen from "../screens/BookingsScreen";
 import FavoritesScreen from "../screens/FavoritesScreen";
-import FavoritesScreen from "../screens/FavoritesScreen";
 import AccountScreen from "../screens/AccountScreen";
 import HomeRoutes from "./HomeRoutes";
 
@@ -20,7 +19,7 @@ const MainRouter = () => {
         headerShown: false,
         gestureEnabled: false,
         tabBarStyle: {
-          height: 90,
+          height: 70,
         },
         tabBarShowLabel: false,
         tabBarIcon: ({ focused, color, size }) => {

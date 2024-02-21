@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import ReservationStepsRouter from "./ReservationStepsRouter";
 import MainRouter from "./MainRouter";
+import HomeRoutes from "./HomeRoutes";
 
 const Stack = createStackNavigator();
 
@@ -15,6 +16,7 @@ const CombineMainAndReservationRouter = () => {
         name="ReservationStepsRouter"
         component={ReservationStepsRouter}
       />
+      <Stack.Screen name="HomeRoutes" component={HomeRoutes} />
     </Stack.Navigator>
   );
 };

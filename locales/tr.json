@@ -1,0 +1,23 @@
+{
+  "selectRoom.roomCardTitle": "Standart Kral Dairesi",
+  "selectRoom.roomOptionRefundable": "İade Edilebilir",
+  "selectRoom.roomOptionBreakfast": "Kahvaltı Dahil",
+  "selectRoom.roomOptionWifi": "Wi-Fi",
+  "selectRoom.roomOptionAirConditioning": "Klima",
+  "selectRoom.roomOptionBath": "Banyo",
+  "selectRoom.nightsText": "gece",
+  "selectRoom.roomCardSelectButtonTitle": "Seç",
+  "reservationSteps.reservation": "Rezervasyon",
+  "reservationDetail.nameInputLabel": "Ad",
+  "reservationDetail.surnameInputLabel": "Soyad",
+  "reservationDetail.numberOfGuestsInputLabel": "Misafir Sayısı",
+  "reservationDetail.emailInputLabel": "E-posta",
+  "reservationDetail.phoneInputLabel": "Telefon Numarası",
+  "reservationDetail.goToPaymentButtonTitle": "Ödemeye Git",
+  "paymentInfo.cardNumberInputLabel": "Kart Numarası",
+  "paymentInfo.cardExpirationInputLabel": "Son Kullanma Tarihi",
+  "paymentInfo.cardCVVInputLabel": "CVV Numarası",
+  "paymentInfo.cardOwnerInputLabel": "Kart Sahibi",
+  "paymentInfo.goToCompleteButtonTitle": "Tamamlamaya Git",
+  "reservationComplete.completeTitle": "Tamamla"
+}
