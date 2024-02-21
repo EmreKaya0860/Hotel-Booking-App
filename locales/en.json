@@ -1,0 +1,23 @@
+{
+  "selectRoom.roomCardTitle": "Standart King Room",
+  "selectRoom.roomOptionRefundable": "Refundable",
+  "selectRoom.roomOptionBreakfast": "Breakfast Included",
+  "selectRoom.roomOptionWifi": "Wi-Fi",
+  "selectRoom.roomOptionAirConditioning": "Air Conditioner",
+  "selectRoom.roomOptionBath": "Bath",
+  "selectRoom.nightsText": "nights",
+  "selectRoom.roomCardSelectButtonTitle": "Select",
+  "reservationSteps.reservation": "Reservation",
+  "reservationDetail.nameInputLabel": "Name",
+  "reservationDetail.surnameInputLabel": "Surname",
+  "reservationDetail.numberOfGuestsInputLabel": "Number of Guests",
+  "reservationDetail.emailInputLabel": "E-mail",
+  "reservationDetail.phoneInputLabel": "Phone Number",
+  "reservationDetail.goToPaymentButtonTitle": "Go To Payment",
+  "paymentInfo.cardNumberInputLabel": "Card Number",
+  "paymentInfo.cardExpirationInputLabel": "Expiration Date",
+  "paymentInfo.cardCVVInputLabel": "CVV Number",
+  "paymentInfo.cardOwnerInputLabel": "Card Owner",
+  "paymentInfo.goToCompleteButtonTitle": "Go To Complete",
+  "reservationComplete.completeTitle": "Complete"
+}

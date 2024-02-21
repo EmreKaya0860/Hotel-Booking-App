@@ -3,8 +3,10 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import MainRouter from "./MainRouter";
+
 import AuthRouter from "./AuthRouter";
+
+import CombineMainAndReservationRouter from "./CombineMainAndReservationRouter";
 
 const Stack = createStackNavigator();
 
@@ -17,7 +19,10 @@ const Router = () => {
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           {user ? (
-            <Stack.Screen name="MainRouter" component={MainRouter} />
+            <Stack.Screen
+              name="HomeRouter"
+              component={CombineMainAndReservationRouter}
+            />
           ) : (
             <Stack.Screen name="AuthRouter" component={AuthRouter} />
           )}
