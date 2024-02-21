@@ -11,7 +11,7 @@ import CombineMainAndReservationRouter from "./CombineMainAndReservationRouter";
 const Stack = createStackNavigator();
 
 const Router = () => {
-  const user = true;
+  const user = false;
   // autha gitmek için user= false
   // main gitmek için user= true
   return (
