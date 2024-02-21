@@ -1,13 +1,13 @@
 import React from "react";
 
-import { NavigationContainer } from "@react-navigation/native";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import HomeScreen from "../screens/HomeScreen";
 import BookingsScreen from "../screens/BookingsScreen";
-import FavoriteScreen from "../screens/FavoriteScreen";
+import FavoritesScreen from "../screens/FavoritesScreen";
 import AccountScreen from "../screens/AccountScreen";
+import HomeRoutes from "./HomeRoutes";
 
 import { FontAwesome } from "@expo/vector-icons";
 
@@ -17,51 +17,52 @@ const MainRouter = () => {
   return (
  
       <Tab.Navigator
-        screenOptions={{
+        screenOptions={({ route, navigation }) => ({
           headerShown: false,
           gestureEnabled: false,
-          tabBarStyle: { height: 70 },
-        }}
+          tabBarStyle: { 
+          height: 90},
+          tabBarShowLabel: false,
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+            const currentColor = focused ? "#37B5B6" : "#B4B4B8";
+            if (route.name === "HomeRoutes") {
+                 iconName = "home"
+              size=30
+            } else if (route.name === "BookingsScreen") {
+              iconName = "address-book";
+            } else if (route.name === "FavoritesScreen") {
+              iconName = "heart";
+            } else if (route.name === "AccountScreen") {
+              iconName = "user";
+            }
+
+            return (
+              <FontAwesome name={iconName} size={size} color={currentColor} />
+              );
+            },
+          })}
+       
+        
       >
         <Tab.Screen
-          name="HomeScreen"
-          component={HomeScreen}
-          options={{
-            tabBarIcon: (color) => (
-              <FontAwesome name="home" size={30} color={color} />
-            ),
-            title: "",
-          }}
+          name="HomeRoutes"
+          component={HomeRoutes}
+         
         />
         <Tab.Screen
           name="BookingsScreen"
           component={BookingsScreen}
-          options={{
-            tabBarIcon: () => (
-              <FontAwesome name="address-book" size={30} color="#DFDEDE" />
-            ),
-            title: "",
-          }}
+      
         />
         <Tab.Screen
-          name="FavoriteScreen"
-          component={FavoriteScreen}
-          options={{
-            tabBarIcon: () => (
-              <FontAwesome name="bell" size={30} color="#DFDEDE" />
-            ),
-            title: "",
-          }}
+          name="FavoritesScreen"
+          component={FavoritesScreen}
+         
         />
         <Tab.Screen
           name="AccountScreen"
           component={AccountScreen}
-          options={{
-            tabBarIcon: () => (
-              <FontAwesome name="user" size={30} color="#DFDEDE" />
-            ),
-            title: "",
-          }}
         />
       </Tab.Navigator>
    
