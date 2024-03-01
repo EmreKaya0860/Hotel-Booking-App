@@ -18,7 +18,7 @@ const SignInScreen = ({ navigation }) => {
 
   const handleLogIn = () => {
     axios
-      .post("http://192.168.5.53:3000/login", {
+      .post("http://localhost:3000/login", {
         userEmail: email,
         userPassword: password,
         headers: {

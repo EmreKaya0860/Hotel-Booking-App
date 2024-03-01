@@ -19,7 +19,7 @@ const SignUpScreen = ({ navigation }) => {
 
   const handleCreateAccount = () => {
     axios
-      .post("http://192.168.5.53:3000/register", {
+      .post("http://localhost:3000/register", {
         userName: name,
         userSurname: Surname,
         userEmail: email,
