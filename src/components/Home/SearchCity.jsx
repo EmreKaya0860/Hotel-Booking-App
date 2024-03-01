@@ -1,10 +1,15 @@
 import { StyleSheet, TextInput, View } from 'react-native'
-import React from 'react'
+import React ,{useState} from 'react'
 
-const SearchCity = () => {
+const SearchCity = ({ onSelectCity }) => {
+
+  const handleCityChange = (text) => {
+    onSelectCity(text); 
+  };
   return (
 
       <TextInput 
+      onChangeText={handleCityChange}
        style={styles.searchCity}
         placeholder="City"
         placeholderStyle={styles.placeholderStyle}

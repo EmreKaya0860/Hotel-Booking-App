@@ -9,13 +9,11 @@ const data = [
   { label: '4', value: '4' },
   { label: '5', value: '5' },
   { label: '6', value: '6' },
-  { label: '6+', value: '7' },
 ];
 
-const DropdownComponent = () => {
-  const [value, setValue] = useState(null);
+const DropdownComponent = ({onSelectGuestCount}) => {
+  const [value, setValue] = useState(1);
   const [isFocus, setIsFocus] = useState(false);
-
 
   return (
     <View style={styles.container}>
@@ -34,6 +32,7 @@ const DropdownComponent = () => {
         onBlur={() => setIsFocus(false)}
         onChange={item => {
           setValue(item.value);
+          onSelectGuestCount(item.value);
           setIsFocus(false);
         }}
         renderLeftIcon={() => (

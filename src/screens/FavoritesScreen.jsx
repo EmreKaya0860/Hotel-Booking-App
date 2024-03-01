@@ -8,7 +8,6 @@ import FavHotelList from '../components/Home/FavHotelList';
 const FavoritesScreen = ({navigation}) => {
   const onHandlePress = (item) => {
     navigation.navigate('HotelDetailScreen', {itemprops :item})
-    console.log(item.name)
   }
   return (
     <View style={styles.container}>

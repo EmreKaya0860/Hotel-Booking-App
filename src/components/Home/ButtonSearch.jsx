@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View ,TouchableOpacity} from 'react-native'
 import React from 'react'
 
-const ButtonSearch = () => {
+const ButtonSearch = ({ onPress }) => {
   return (
-    <TouchableOpacity style={styles.button} onPress={() => console.log("Button pressed")}>
+    <TouchableOpacity style={styles.button} onPress={onPress}>
     <Text style={styles.buttonText}>Search a Hotel</Text>
   </TouchableOpacity>
   )

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@georstat/react-native-image-gallery": "^1.1.0",
+    "@react-native-async-storage/async-storage": "^1.22.2",
     "@react-native-community/datetimepicker": "^7.6.2",
     "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/native": "^6.1.9",
@@ -21,6 +22,7 @@
     "expo-localization": "^14.8.3",
     "expo-location": "~16.5.3",
     "expo-status-bar": "~1.11.1",
+    "firebase": "^10.8.0",
     "formik": "^2.4.5",
     "i18next": "^23.9.0",
     "react": "18.2.0",

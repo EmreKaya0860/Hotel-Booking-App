@@ -5,13 +5,24 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React , {useState, useEffect} from "react";
 import DropdownGuest from "../components/Home/DropDownGuest";
 import SearchCity from "../components/Home/SearchCity";
 import ButtonSearch from "../components/Home/ButtonSearch";
 import RecommendedHotels from "../components/Home/RecommendedHotels";
 
 const HomeScreen = ({ navigation }) => {
+  const [city, setCity] = useState('');
+  const [guestCount, setGuestCount] = useState(1);
+  const handleSearch = () => {
+  navigation.navigate("HotelsScreen", {city, guestCount})
+  };
+  const handleCityChange = (city) => {
+    setCity(city);
+  };
+  const handleGuestCount = (guestCount) => {
+    setGuestCount(guestCount);
+  }
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -26,16 +37,18 @@ const HomeScreen = ({ navigation }) => {
 
       <View style={styles.herocard}>
         <View style={styles.selectionContainer}>
-          <SearchCity></SearchCity>
-          <DropdownGuest></DropdownGuest>
+        <SearchCity onSelectCity={handleCityChange} />
+        <DropdownGuest onSelectGuestCount={handleGuestCount} />
         </View>
-        <ButtonSearch></ButtonSearch>
+        <ButtonSearch onPress={handleSearch} />
 
         <View>
           <View style={styles.rcheader}>
             <Text style={styles.recommended}>Recommended</Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate("HotelsScreen")}
+             onPress={() => {
+              navigation.navigate("HotelsScreen", { city: "", guestCount: 1 });
+            }}
             >
               <Text style={styles.seeall}>See All</Text>
             </TouchableOpacity>
