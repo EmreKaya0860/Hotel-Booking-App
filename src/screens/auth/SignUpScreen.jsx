@@ -5,9 +5,11 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
+import axios from "axios";
 
 const SignUpScreen = ({ navigation }) => {
   const [name, setName] = useState("");
@@ -16,8 +18,21 @@ const SignUpScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
 
   const handleCreateAccount = () => {
-    console.log(name, email, password);
-    alert("Account created successfully!");
+    axios
+      .post("http://192.168.5.53:3000/register", {
+        userName: name,
+        userSurname: Surname,
+        userEmail: email,
+        userPassword: password,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      })
+      .then((res) => {
+        if(res.data.key) return navigation.navigate("SignInScreen")
+        Alert.alert(res.data.message)
+        
+      });
   };
   const navigationSignInScreen = () => {
     navigation.navigate("SignInScreen");
