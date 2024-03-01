@@ -4,6 +4,7 @@ import { AntDesign } from '@expo/vector-icons';
 const SearchHotel = ({onSearchHotel}) => {
   const handleSearchHotel = (text) => {
     onSearchHotel(text);
+   
   }
   return (
     <View style={styles.container}>

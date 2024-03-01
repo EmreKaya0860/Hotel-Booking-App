@@ -10,7 +10,7 @@ const WelcomeScreen = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.textWrapper}>
         <ImageBackground
-        source={require("../../../assets/saad-khan-425b2PhNuHA-unsplash (1).jpg")}
+        source={require("../../../assets/5.jpeg")}
         resizeMode="cover"
         style={styles.image}
       >
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#05C1CD",
+    backgroundColor: "#FEC069",
     backfaceVisibility: "hidden",
     padding: 10,
     bottom: 10,

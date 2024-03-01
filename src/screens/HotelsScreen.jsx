@@ -19,7 +19,7 @@ const userEmail="aliveli@gmail.com";
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', fetchHotels);
-
+    fetchHotels();
     return unsubscribe;
   }, [city, guestCount, hotelname,userEmail,navigation]);
   const fetchHotels = async () => {
@@ -135,7 +135,7 @@ const userEmail="aliveli@gmail.com";
        
     <View  style={styles.container2} >
     <View style={styles.imageContainer}>
-     <TouchableOpacity onPress={() =>onHandlePress(item.DocId,item.Name)}> 
+     <TouchableOpacity onPress={() =>onHandlePress(item.DocId,item.Name,item.Id)}> 
      <Image source={{ uri: item.ImageUrl }} style={styles.image2} />
      </TouchableOpacity> 
      <Pressable style={styles.icon} onPress={() => handleLike(item)}>
@@ -155,9 +155,10 @@ const userEmail="aliveli@gmail.com";
       </View>
   ); 
 
-  const onHandlePress = (id,name) => {
-navigation.navigate('HotelDetailScreen', { selectedHotelId: id,
-hotelName: name })
+  const onHandlePress = (docid,name,id) => {
+navigation.navigate('HotelDetailScreen', { selectedHotelId: docid,
+hotelName: name ,
+hotelId:id})
 
  
   }
@@ -166,6 +167,7 @@ hotelName: name })
  
   const handleSearchHotel = (hotelname) => {
     setHotelName(hotelname);
+    console.log(hotelname)
   };
   return (
     

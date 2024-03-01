@@ -13,7 +13,7 @@ export default ButtonSearch
 
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: '#52D3D8',
+        backgroundColor: '#FEC069',
         padding: 10,
         borderRadius: 5,
         margin: 20,

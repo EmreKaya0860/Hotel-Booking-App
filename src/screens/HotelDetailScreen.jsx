@@ -17,7 +17,7 @@ import { db } from "../service/firebase";
 import { collection, onSnapshot } from "firebase/firestore";
 import { getDocs, query, where,orderBy, startAt , endAt} from "firebase/firestore";
 const HotelDetailScreen = ({ navigation, route }) => {
-  const { selectedHotelId,hotelName } = route.params;
+  const { selectedHotelId,hotelName,hotelId } = route.params;
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
 
@@ -42,7 +42,7 @@ const HotelDetailScreen = ({ navigation, route }) => {
       try {
    
         const hotelsRef = collection(db, 'Hotels');
-        const q = query(hotelsRef, where('Id', '==', itemId));
+        const q = query(hotelsRef, where('Id', '==', hotelId));
 
      
         const querySnapshot = await getDocs(q);
@@ -78,7 +78,7 @@ const HotelDetailScreen = ({ navigation, route }) => {
     };
 
      fetchHotelDetails();
-  }, [itemId]); 
+  }, [hotelId]); 
 
   return (
     <>
@@ -88,7 +88,7 @@ const HotelDetailScreen = ({ navigation, route }) => {
             <Ionicons name="chevron-back-outline" size={30} color="white" />
           </TouchableOpacity>
           <Text style={styles.hotelName}>{hotelDetails.Name}</Text>
-          <AntDesign name="hearto" size={24} color="white" />
+         
         </View>
         <View>
         <Image source={{ uri: firstImage }} style={styles.image} /> 
@@ -136,7 +136,7 @@ const HotelDetailScreen = ({ navigation, route }) => {
       >
         <View
           style={{
-            backgroundColor: "#37B5B6",
+            backgroundColor: "#FEC069",
             width: "100%",
             height: 50,
             justifyContent: "center",
@@ -166,12 +166,14 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
+    textAlign: "center",
     alignItems: "center",
     top: 60,
     zIndex: 100,
     paddingHorizontal: 20,
   },
   hotelName: {
+    flex: 1, textAlign: 'center',
     color: "white",
     fontSize: 24,
     fontWeight: "bold",

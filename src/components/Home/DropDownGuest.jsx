@@ -18,7 +18,7 @@ const DropdownComponent = ({onSelectGuestCount}) => {
   return (
     <View style={styles.container}>
       <Dropdown
-        style={[styles.dropdown, isFocus && { borderColor: '#2D9596' }]}
+        style={[styles.dropdown, isFocus && { borderColor: '#FEC069' }]}
         placeholderStyle={styles.placeholderStyle}
         selectedTextStyle={styles.selectedTextStyle}
         iconStyle={styles.iconStyle}

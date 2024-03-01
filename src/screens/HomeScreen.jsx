@@ -126,6 +126,6 @@ const styles = StyleSheet.create({
   seeall: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#FEBF63",
+    color: "#FF776F",
   },
 });
