@@ -5,9 +5,11 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
+import axios from "axios";
 
 const SignInScreen = ({ navigation }) => {
   const [name, setName] = useState("");
@@ -15,7 +17,19 @@ const SignInScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
 
   const handleLogIn = () => {
-    navigation.navigate("MainScreen");
+    axios
+      .post("http://localhost:3000/login", {
+        userEmail: email,
+        userPassword: password,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      })
+      .then((res) => {
+        console.log(res)
+        if (res.data.key) return navigation.navigate("MainScreen");
+        Alert.alert('Şifre yanlış veya kullanıcı yok.')
+      });
   };
 
   const navigationSignUpScreen = () => {
