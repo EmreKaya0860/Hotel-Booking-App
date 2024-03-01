@@ -135,7 +135,7 @@ const userEmail="aliveli@gmail.com";
        
     <View  style={styles.container2} >
     <View style={styles.imageContainer}>
-     <TouchableOpacity onPress={() =>onHandlePress(item.Id)}> 
+     <TouchableOpacity onPress={() =>onHandlePress(item.DocId,item.Name)}> 
      <Image source={{ uri: item.ImageUrl }} style={styles.image2} />
      </TouchableOpacity> 
      <Pressable style={styles.icon} onPress={() => handleLike(item)}>
@@ -155,8 +155,9 @@ const userEmail="aliveli@gmail.com";
       </View>
   ); 
 
-  const onHandlePress = (id) => {
-navigation.navigate('HotelDetailScreen', {itemId :id })
+  const onHandlePress = (id,name) => {
+navigation.navigate('HotelDetailScreen', { selectedHotelId: id,
+hotelName: name })
 
  
   }

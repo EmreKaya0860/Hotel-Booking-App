@@ -17,16 +17,18 @@ import { db } from "../service/firebase";
 import { collection, onSnapshot } from "firebase/firestore";
 import { getDocs, query, where,orderBy, startAt , endAt} from "firebase/firestore";
 const HotelDetailScreen = ({ navigation, route }) => {
-  const { itemId } = route.params;
+  const { selectedHotelId,hotelName } = route.params;
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
 
   const [isOpen, setIsOpen] = useState(false);
   const openGallery = () => setIsOpen(true);
   const closeGallery = () => setIsOpen(false);
-  const onHandlePress = (item) => {
-    navigation.navigate("ReservationStepsRouter",{itemId:itemId});
-
+  const onHandlePress = () => {
+    navigation.navigate("ReservationStepsRouter", {
+      selectedHotelId: selectedHotelId,
+      hotelName: hotelName,
+    });
   };
   const [hotelDetails, setHotelDetails] = useState({});
 
