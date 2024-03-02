@@ -7,15 +7,18 @@ import { db } from "../service/firebase";
 import { collection, onSnapshot } from "firebase/firestore";
 import { getDocs, query, where,orderBy, startAt , endAt,doc, updateDoc } from "firebase/firestore";
 import { AntDesign } from '@expo/vector-icons';
-import { user } from "../service/firebase";
 import { useNavigation } from '@react-navigation/native';
+import { getAuth } from "firebase/auth";
 const HotelsScreen = ({navigation,route}) => {
   const { city, guestCount } = route.params;
   const [hotels, setHotels] = useState([]);
   const [hotelname, setHotelName] = useState('');
   const [documentName, setDocumentName] = useState([]);
  
-const userEmail="aliveli@gmail.com";
+  const auth = getAuth();
+const user = auth.currentUser;
+const userEmail=user.email;
+console.log("usermail" ,user.email) ;
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', fetchHotels);

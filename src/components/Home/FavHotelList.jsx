@@ -3,11 +3,14 @@ import React,{useState, useEffect} from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import { db } from "../../service/firebase";
 import { collection, onSnapshot } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 import { useNavigation } from '@react-navigation/native';
 import { getDocs, query, where,orderBy, startAt , endAt,doc, updateDoc} from "firebase/firestore";
 const FavHotelList = ({onPress,onLike}) => {
   const [hotels, setHotels] = useState([]);
-  const userEmail = "aliveli@gmail.com";
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const userEmail=user.email;
   const navigation = useNavigation();
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', fetchLikedHotels);

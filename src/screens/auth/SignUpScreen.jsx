@@ -9,30 +9,50 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
-import axios from "axios";
-
+import {auth, db} from '../../service/firebase'
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
+import { collection, onSnapshot } from "firebase/firestore";
+import { getDocs, query, where,orderBy, startAt , endAt,doc, updateDoc, setDoc} from "firebase/firestore";
 const SignUpScreen = ({ navigation }) => {
   const [name, setName] = useState("");
   const [Surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState(""); 
 
   const handleCreateAccount = () => {
-    axios
-      .post("http://localhost:3000/register", {
-        userName: name,
-        userSurname: Surname,
-        userEmail: email,
-        userPassword: password,
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      })
-      .then((res) => {
-        if(res.data.key) return navigation.navigate("SignInScreen")
-        Alert.alert(res.data.message)
+ 
+    async function createUser(email, password, name, surname) {
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
         
-      });
+        // Kullanıcı UID'sini al
+        const uid = user.uid;
+    
+        // Kullanıcı bilgileriyle birlikte bir doküman oluştur
+        const userDocRef = doc(db, "Users", uid);
+        await setDoc(userDocRef, {
+          Email: email,
+          Name: name,
+          Surname: surname,
+          Password: password,
+          Photo: null,
+          LikedHotels: [],
+          Reservations: []
+        });
+    
+        console.log("Kullanıcı oluşturuldu ve kullanıcı bilgileri Firestore'a eklendi.");
+      } catch (error) {
+        console.error("Kullanıcı oluşturma hatası:", error);
+      }
+    }
+    
+    // Kullanıcı oluşturma fonksiyonunu çağır
+    createUser(email,password,name, Surname);
+    
   };
   const navigationSignInScreen = () => {
     navigation.navigate("SignInScreen");

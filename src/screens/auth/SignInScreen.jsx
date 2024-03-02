@@ -9,27 +9,24 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
-import axios from "axios";
-
+import {auth} from '../../service/firebase'
+import { signInWithEmailAndPassword } from "firebase/auth";
 const SignInScreen = ({ navigation }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogIn = () => {
-    axios
-      .post("http://localhost:3000/login", {
-        userEmail: email,
-        userPassword: password,
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log("Logged in user:", user);
       })
-      .then((res) => {
-        console.log(res)
-        if (res.data.key) return navigation.navigate("MainScreen");
-        Alert.alert('Şifre yanlış veya kullanıcı yok.')
-      });
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error("Login error:", errorCode, errorMessage);
+      }); 
   };
 
   const navigationSignUpScreen = () => {
