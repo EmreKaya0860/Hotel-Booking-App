@@ -15,10 +15,12 @@ import CardImage from "../../assets/ReservationSteps/CreditCard.png";
 
 import { useTranslation } from "react-i18next";
 
-const PaymentInfoScreen = ({ navigation }) => {
+const PaymentInfoScreen = ({ route, navigation }) => {
   const [cardNumber, setCardNumber] = useState("");
   const [cardOwner, setCardOwner] = useState("");
   const [cardExpDate, setCardExpDate] = useState("");
+
+  const { reservationDetails, selectedRoom } = route.params;
 
   const { t } = useTranslation();
 
@@ -27,7 +29,10 @@ const PaymentInfoScreen = ({ navigation }) => {
   };
 
   const goToCompleteButton = () => {
-    navigation.navigate("ReservationCompleteScreen");
+    navigation.navigate("ReservationCompleteScreen", {
+      reservationDetails: reservationDetails,
+      selectedRoom: selectedRoom,
+    });
   };
 
   return (

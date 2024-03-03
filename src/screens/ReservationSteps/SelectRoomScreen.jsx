@@ -5,171 +5,141 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  ActivityIndicator,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-
-import RoomImage from "../../assets/ReservationSteps/roomImage.png";
 
 import { Entypo, FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 
 import { useTranslation } from "react-i18next";
 
-const SelectRoomScreen = ({ navigation }) => {
+import { getRooms } from "../../service/ReservationStepsApi";
+
+const SelectRoomScreen = ({ route, navigation }) => {
   const { t } = useTranslation();
+  const [status, setStatus] = useState("loading");
+  const [roomsInfos, setRoomsInfos] = useState([]);
+
+  const { selectedHotelId, hotelName } = route.params;
 
   const goBackButton = () => {
     navigation.goBack();
   };
 
-  const goReservationDetailScreen = () => {
-    navigation.navigate("ReservationDetailScreen");
+  useEffect(() => {
+    selectedHotelId &&
+      getRooms(selectedHotelId).then((rooms) => {
+        setRoomsInfos(rooms);
+        roomsInfos && setStatus("idle");
+      });
+  }, [status]);
+
+  const goReservationDetailScreen = (room) => {
+    navigation.navigate("ReservationDetailScreen", {
+      selectedRoom: room,
+      selectedHotelId: selectedHotelId,
+    });
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={goBackButton}>
-          <Entypo name="chevron-left" size={30} color="#393939" />
-        </TouchableOpacity>
-        <Text style={styles.headerText}>Beach Resort Lux</Text>
-      </View>
-      <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
-        <View style={styles.roomCard}>
-          <Image source={RoomImage} style={styles.roomImage} />
-          <View style={styles.roomDetailsContainer}>
-            <View style={styles.roomTypeHeaderContainer}>
-              <Text style={styles.roomTypeText}>
-                {t("selectRoom.roomCardTitle")}
-              </Text>
-              <TouchableOpacity>
-                <FontAwesome name="info-circle" size={24} color="#0291F6" />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.roomOptionsContainer}>
-              <View style={styles.roomOptionRow}>
-                <FontAwesome5 name="coins" size={20} color="#DFDEDE" />
-                <Text style={styles.roomOptionText}>
-                  {t("selectRoom.roomOptionRefundable")}
-                </Text>
-              </View>
-              <View style={styles.roomOptionRow}>
-                <FontAwesome name="coffee" size={20} color="#DFDEDE" />
-                <Text style={styles.roomOptionText}>
-                  {t("selectRoom.roomOptionBreakfast")}
-                </Text>
-              </View>
-              <View style={styles.roomOptionRow}>
-                <FontAwesome5 name="wifi" size={20} color="#DFDEDE" />
-                <Text style={styles.roomOptionText}>
-                  {t("selectRoom.roomOptionWifi")}
-                </Text>
-              </View>
-              <View style={styles.roomOptionRow}>
-                <FontAwesome5
-                  name="temperature-low"
-                  size={20}
-                  color="#DFDEDE"
-                />
-                <Text style={styles.roomOptionText}>
-                  {t("selectRoom.roomOptionAirConditioning")}
-                </Text>
-              </View>
-              <View style={styles.roomOptionRow}>
-                <FontAwesome5 name="bath" size={20} color="#DFDEDE" />
-                <Text style={styles.roomOptionText}>
-                  {t("selectRoom.roomOptionBath")}
-                </Text>
-              </View>
-            </View>
-            <View style={styles.priceAndSelectButtonContainer}>
-              <View style={styles.priceContainer}>
-                <Text style={styles.priceText}>$1480</Text>
-                <Text style={styles.nightText}>
-                  2 {t("selectRoom.nightsText")}
-                </Text>
-              </View>
-              <TouchableOpacity onPress={goReservationDetailScreen}>
-                <LinearGradient
-                  colors={["#0291F6", "#06C0CF"]}
-                  style={styles.selectButton}
-                >
-                  <Text style={styles.selectButtonText}>
-                    {t("selectRoom.roomCardSelectButtonTitle")}
-                  </Text>
-                </LinearGradient>
-              </TouchableOpacity>
-            </View>
+      {status === "loading" ? (
+        <ActivityIndicator
+          size="large"
+          color="dodgerblue"
+          style={{ flex: 1 }}
+        />
+      ) : (
+        <>
+          <View style={styles.header}>
+            <TouchableOpacity onPress={goBackButton}>
+              <Entypo name="chevron-left" size={30} color="#393939" />
+            </TouchableOpacity>
+            <Text style={styles.headerText}>{hotelName}</Text>
           </View>
-        </View>
-        <View style={styles.roomCard}>
-          <Image source={RoomImage} style={styles.roomImage} />
-          <View style={styles.roomDetailsContainer}>
-            <View style={styles.roomTypeHeaderContainer}>
-              <Text style={styles.roomTypeText}>
-                {t("selectRoom.roomCardTitle")}
-              </Text>
-              <TouchableOpacity>
-                <FontAwesome name="info-circle" size={24} color="#0291F6" />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.roomOptionsContainer}>
-              <View style={styles.roomOptionRow}>
-                <FontAwesome5 name="coins" size={20} color="#DFDEDE" />
-                <Text style={styles.roomOptionText}>
-                  {t("selectRoom.roomOptionRefundable")}
-                </Text>
-              </View>
-              <View style={styles.roomOptionRow}>
-                <FontAwesome name="coffee" size={20} color="#DFDEDE" />
-                <Text style={styles.roomOptionText}>
-                  {t("selectRoom.roomOptionBreakfast")}
-                </Text>
-              </View>
-              <View style={styles.roomOptionRow}>
-                <FontAwesome5 name="wifi" size={20} color="#DFDEDE" />
-                <Text style={styles.roomOptionText}>
-                  {t("selectRoom.roomOptionWifi")}
-                </Text>
-              </View>
-              <View style={styles.roomOptionRow}>
-                <FontAwesome5
-                  name="temperature-low"
-                  size={20}
-                  color="#DFDEDE"
-                />
-                <Text style={styles.roomOptionText}>
-                  {t("selectRoom.roomOptionAirConditioning")}
-                </Text>
-              </View>
-              <View style={styles.roomOptionRow}>
-                <FontAwesome5 name="bath" size={20} color="#DFDEDE" />
-                <Text style={styles.roomOptionText}>
-                  {t("selectRoom.roomOptionBath")}
-                </Text>
-              </View>
-            </View>
-            <View style={styles.priceAndSelectButtonContainer}>
-              <View style={styles.priceContainer}>
-                <Text style={styles.priceText}>$1480</Text>
-                <Text style={styles.nightText}>
-                  2 {t("selectRoom.nightsText")}
-                </Text>
-              </View>
-              <TouchableOpacity onPress={goReservationDetailScreen}>
-                <LinearGradient
-                  colors={["#0291F6", "#06C0CF"]}
-                  style={styles.selectButton}
-                >
-                  <Text style={styles.selectButtonText}>
-                    {t("selectRoom.roomCardSelectButtonTitle")}
-                  </Text>
-                </LinearGradient>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </ScrollView>
+          <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
+            {roomsInfos.map((room, index) => {
+              return (
+                <View style={styles.roomCard} key={index}>
+                  <Image
+                    source={{ uri: room.image }}
+                    style={styles.roomImage}
+                  />
+                  <View style={styles.roomDetailsContainer}>
+                    <View style={styles.roomTypeHeaderContainer}>
+                      <Text style={styles.roomTypeText}>{room.type}</Text>
+                      <TouchableOpacity>
+                        <FontAwesome
+                          name="info-circle"
+                          size={24}
+                          color="#FEC069"
+                        />
+                      </TouchableOpacity>
+                    </View>
+                    <View style={styles.roomOptionsContainer}>
+                      <View style={styles.roomOptionRow}>
+                        <FontAwesome5 name="coins" size={20} color="#DFDEDE" />
+                        <Text style={styles.roomOptionText}>
+                          {t("selectRoom.roomOptionRefundable")}
+                        </Text>
+                      </View>
+                      <View style={styles.roomOptionRow}>
+                        <FontAwesome name="coffee" size={20} color="#DFDEDE" />
+                        <Text style={styles.roomOptionText}>
+                          {t("selectRoom.roomOptionBreakfast")}
+                        </Text>
+                      </View>
+                      <View style={styles.roomOptionRow}>
+                        <FontAwesome5 name="wifi" size={20} color="#DFDEDE" />
+                        <Text style={styles.roomOptionText}>
+                          {t("selectRoom.roomOptionWifi")}
+                        </Text>
+                      </View>
+                      <View style={styles.roomOptionRow}>
+                        <FontAwesome5
+                          name="temperature-low"
+                          size={20}
+                          color="#DFDEDE"
+                        />
+                        <Text style={styles.roomOptionText}>
+                          {t("selectRoom.roomOptionAirConditioning")}
+                        </Text>
+                      </View>
+                      <View style={styles.roomOptionRow}>
+                        <FontAwesome5 name="bath" size={20} color="#DFDEDE" />
+                        <Text style={styles.roomOptionText}>
+                          {t("selectRoom.roomOptionBath")}
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={styles.priceAndSelectButtonContainer}>
+                      <View style={styles.priceContainer}>
+                        <Text style={styles.priceText}>{room.price} $</Text>
+                        <Text style={styles.nightText}>
+                          2 {t("selectRoom.nightsText")}
+                        </Text>
+                      </View>
+                      <TouchableOpacity
+                        onPress={() => goReservationDetailScreen(room)}
+                      >
+                        <LinearGradient
+                          colors={["#FEC069", "#F6D5A5"]}
+                          style={styles.selectButton}
+                        >
+                          <Text style={styles.selectButtonText}>
+                            {t("selectRoom.roomCardSelectButtonTitle")}
+                          </Text>
+                        </LinearGradient>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>
+              );
+            })}
+          </ScrollView>
+        </>
+      )}
     </View>
   );
 };
@@ -206,6 +176,7 @@ const styles = StyleSheet.create({
   },
   roomImage: {
     width: "100%",
+    height: 190,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },

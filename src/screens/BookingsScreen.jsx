@@ -1,13 +1,88 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 
+import { getReservations, getHotelById } from "../service/ReservationStepsApi";
+
 const BookingsScreen = () => {
   const [tab, setTab] = useState(1);
+  const [reservations, setReservations] = useState([]);
+  const [previousReservations, setPreviousReservations] = useState([]);
+  const [previousHotelDetail, setPreviousHotelDetail] = useState([]);
+  const [currentReservations, setCurrentReservations] = useState([]);
+  const [currentHotelDetail, setCurrentHotelDetail] = useState([]);
 
-  return (
+  useEffect(() => {
+    getReservations()
+      .then((reservations) => {
+        setReservations(reservations);
+        const currentDate = new Date();
+        const previousReservations = reservations
+          .filter(
+            (reservation) => new Date(reservation.checkOutDate) < currentDate
+          )
+          .map((reservation) => ({
+            ...reservation,
+            checkInDate: new Date(reservation.checkInDate).toLocaleDateString(
+              "en-US",
+              { year: "numeric", month: "short", day: "numeric" }
+            ),
+            checkOutDate: new Date(reservation.checkOutDate).toLocaleDateString(
+              "en-US",
+              { year: "numeric", month: "short", day: "numeric" }
+            ),
+          }));
+        setPreviousReservations(previousReservations);
+
+        const currentReservations = reservations
+          .filter(
+            (reservation) => new Date(reservation.checkOutDate) >= currentDate
+          )
+          .map((reservation) => ({
+            ...reservation,
+            checkInDate: new Date(reservation.checkInDate).toLocaleDateString(
+              "en-US",
+              { year: "numeric", month: "short", day: "numeric" }
+            ),
+            checkOutDate: new Date(reservation.checkOutDate).toLocaleDateString(
+              "en-US",
+              { year: "numeric", month: "short", day: "numeric" }
+            ),
+          }));
+        setCurrentReservations(currentReservations);
+
+        Promise.all(
+          previousReservations.map((reservation) =>
+            getHotelById(reservation.hotelId)
+          )
+        ).then((hotelDetails) => {
+          setPreviousHotelDetail(hotelDetails);
+        });
+
+        Promise.all(
+          currentReservations.map((reservation) =>
+            getHotelById(reservation.hotelId)
+          )
+        ).then((hotelDetails) => {
+          setCurrentHotelDetail(hotelDetails);
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching reservations:", error);
+      });
+    console.log("current: ", currentHotelDetail);
+  }, []);
+
+  return previousHotelDetail ? (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileHeader}>
         <Ionicons name="arrow-back" size={20} />
@@ -60,208 +135,133 @@ const BookingsScreen = () => {
             display: tab == 1 ? "block" : "none",
           }}
         >
-          <View
-            style={{
-              alignSelf: "center",
-              height: 200,
-              width: "87%",
-              flexDirection: "row",
-              justifyContent: "center",
-              marginTop: 30,
-              backgroundColor: "whitesmoke",
-              borderRadius: 20,
-            }}
-          >
-            <View>
+          {currentReservations.map((reservation, index) => {
+            return (
               <View
                 style={{
+                  alignSelf: "center",
+                  height: 200,
+                  width: "87%",
                   flexDirection: "row",
-                  paddingHorizontal: 20,
-                  marginTop: 10,
+                  justifyContent: "center",
+                  marginTop: 30,
+                  backgroundColor: "whitesmoke",
+                  borderRadius: 20,
                 }}
+                key={index}
               >
-                <Image
-                  source={{
-                    uri: "https://digital.ihg.com/is/image/ihg/voco-new-york-6671510166-16x9",
-                  }}
-                  resizeMode="contain"
-                  style={{ width: 140, height: 90, borderRadius: 15 }}
-                />
-                <View style={{ flexDirection: "column" }}>
-                  <Text
-                    style={{ padding: 10, paddingHorizontal: 10, fontSize: 18 }}
-                  >
-                    The Franklin New York
-                  </Text>
-                  <Text style={{ fontSize: 12, marginLeft: 10 }}>
-                    164 East 87 Street New York 10128
-                  </Text>
-                  <View style={{ flexDirection: "row" }}>
-                    <Text
-                      style={{ fontSize: 13, marginTop: 8, marginLeft: 10 }}
-                    >
-                      $35/Night{" "}
-                    </Text>
-                    <Ionicons
-                      name="star"
-                      size={18}
-                      color={"gold"}
-                      style={{ top: 6 }}
-                    />
-                    <Text
+                <View>
+                  {currentHotelDetail.length > 0 &&
+                    currentHotelDetail.map((hotel, index) => {
+                      return (
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            paddingHorizontal: 20,
+                            marginTop: 10,
+                          }}
+                          key={index}
+                        >
+                          <Image
+                            source={{
+                              uri: hotel.ImageUrl,
+                            }}
+                            resizeMode="contain"
+                            style={{ width: 140, height: 90, borderRadius: 15 }}
+                          />
+                          <View style={{ flexDirection: "column" }}>
+                            <Text
+                              style={{
+                                padding: 10,
+                                paddingHorizontal: 10,
+                                fontSize: 18,
+                              }}
+                            >
+                              {hotel.Name}
+                            </Text>
+                            <Text style={{ fontSize: 10, marginLeft: 10 }}>
+                              {hotel.Address}
+                            </Text>
+                            <View style={{ flexDirection: "row" }}>
+                              <Text
+                                style={{
+                                  fontSize: 13,
+                                  marginTop: 8,
+                                  marginLeft: 10,
+                                }}
+                              >
+                                ${reservation.price}{" "}
+                              </Text>
+                              <Ionicons
+                                name="star"
+                                size={18}
+                                color={"gold"}
+                                style={{ top: 6 }}
+                              />
+                              <Text
+                                style={{
+                                  fontSize: 13,
+                                  marginTop: 8,
+                                  marginLeft: 5,
+                                  color: "gold",
+                                }}
+                              >
+                                {hotel.Rating}
+                              </Text>
+                              <Text
+                                style={{
+                                  fontSize: 13,
+                                  marginTop: 8,
+                                  marginLeft: 5,
+                                }}
+                              >
+                                ({hotel.Comment} Reviews)
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                      );
+                    })}
+                  <TouchableOpacity>
+                    <View
                       style={{
-                        fontSize: 13,
-                        marginTop: 8,
-                        marginLeft: 5,
-                        color: "gold",
+                        alignSelf: "center",
+                        justifyContent: "space-around",
+                        height: 80,
+                        width: "90%",
+                        backgroundColor: "white",
+                        borderRadius: 20,
+                        flexDirection: "row",
+                        marginTop: 10,
                       }}
                     >
-                      4.2
-                    </Text>
-                    <Text style={{ fontSize: 13, marginTop: 8, marginLeft: 5 }}>
-                      (84 Reviews)
-                    </Text>
-                  </View>
+                      <View style={{ flexDirection: "column" }}>
+                        <Text style={{ fontSize: 15, marginTop: 10 }}>
+                          Check In
+                        </Text>
+                        <Text style={{ fontSize: 20, marginTop: 10 }}>
+                          {reservation.checkInDate}
+                        </Text>
+                      </View>
+                      <Ionicons
+                        name="arrow-forward"
+                        size={20}
+                        style={{ alignSelf: "center" }}
+                      />
+                      <View style={{ flexDirection: "column" }}>
+                        <Text style={{ fontSize: 15, marginTop: 10 }}>
+                          Check Out
+                        </Text>
+                        <Text style={{ fontSize: 20, marginTop: 10 }}>
+                          {reservation.checkOutDate}
+                        </Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
                 </View>
               </View>
-              <TouchableOpacity>
-                <View
-                  style={{
-                    alignSelf: "center",
-                    justifyContent: "space-around",
-                    height: 80,
-                    width: "90%",
-                    backgroundColor: "white",
-                    borderRadius: 20,
-                    flexDirection: "row",
-                    marginTop: 10,
-                  }}
-                >
-                  <View style={{ flexDirection: "column" }}>
-                    <Text style={{ fontSize: 15, marginTop: 10 }}>
-                      Check In
-                    </Text>
-                    <Text style={{ fontSize: 20, marginTop: 10 }}>12 June</Text>
-                  </View>
-                  <Ionicons
-                    name="arrow-forward"
-                    size={20}
-                    style={{ alignSelf: "center" }}
-                  />
-                  <View style={{ flexDirection: "column" }}>
-                    <Text style={{ fontSize: 15, marginTop: 10 }}>
-                      Check Out
-                    </Text>
-                    <Text style={{ fontSize: 20, marginTop: 10 }}>28 June</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View
-            style={{
-              alignSelf: "center",
-              height: 200,
-              width: "87%",
-              flexDirection: "row",
-              justifyContent: "center",
-              marginTop: 30,
-              backgroundColor: "whitesmoke",
-              borderRadius: 20,
-            }}
-          >
-            <View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  paddingHorizontal: 20,
-                  marginTop: 10,
-                }}
-              >
-                <Image
-                  source={{
-                    uri: "https://images.trvl-media.com/lodging/2000000/1870000/1866500/1866407/47e1e07e.jpg?impolicy=resizecrop&rw=1200&ra=fit",
-                  }}
-                  resizeMode="contain"
-                  style={{ width: 140, height: 90, borderRadius: 15 }}
-                />
-                <View style={{ flexDirection: "column", width: "65%" }}>
-                  <Text
-                    style={{ padding: 10, paddingHorizontal: 10, fontSize: 18 }}
-                  >
-                    SIXTY Lower East Side
-                  </Text>
-                  <Text
-                    style={{ maxWidth: "90%", fontSize: 12, marginLeft: 10 }}
-                  >
-                    190 Allen Street, New York, NY, 10002
-                  </Text>
-                  <View style={{ flexDirection: "row" }}>
-                    <Text
-                      style={{ fontSize: 13, marginTop: 8, marginLeft: 10 }}
-                    >
-                      $35/Night{" "}
-                    </Text>
-                    <Ionicons
-                      name="star"
-                      size={18}
-                      color={"gold"}
-                      style={{ top: 6 }}
-                    />
-                    <Text
-                      style={{
-                        fontSize: 13,
-                        marginTop: 8,
-                        marginLeft: 5,
-                        color: "gold",
-                      }}
-                    >
-                      4.2
-                    </Text>
-                    <Text style={{ fontSize: 13, marginTop: 8, marginLeft: 5 }}>
-                      (84 Reviews)
-                    </Text>
-                  </View>
-                </View>
-              </View>
-              <TouchableOpacity>
-                <View
-                  style={{
-                    alignSelf: "center",
-                    justifyContent: "space-around",
-                    height: 80,
-                    width: "90%",
-                    backgroundColor: "white",
-                    borderRadius: 20,
-                    flexDirection: "row",
-                    marginTop: 10,
-                  }}
-                >
-                  <View style={{ flexDirection: "column" }}>
-                    <Text style={{ fontSize: 15, marginTop: 10 }}>
-                      Check In
-                    </Text>
-                    <Text style={{ fontSize: 20, marginTop: 10 }}>
-                      12 September
-                    </Text>
-                  </View>
-                  <Ionicons
-                    name="arrow-forward"
-                    size={20}
-                    style={{ alignSelf: "center" }}
-                  />
-                  <View style={{ flexDirection: "column" }}>
-                    <Text style={{ fontSize: 15, marginTop: 10 }}>
-                      Check Out
-                    </Text>
-                    <Text style={{ fontSize: 20, marginTop: 10 }}>
-                      28 September
-                    </Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            </View>
-          </View>
+            );
+          })}
         </View>
 
         <View
@@ -269,14 +269,138 @@ const BookingsScreen = () => {
             display: tab == 2 ? "block" : "none",
           }}
         >
-          <View style={{ alignSelf: "center", marginTop: 30 }}>
-            <Text style={{ textAlign: "center", color: "darkgray" }}>
-              Doldurulabilir Alan
-            </Text>
-          </View>
+          {previousReservations.map((reservation, index) => {
+            return (
+              <View
+                style={{
+                  alignSelf: "center",
+                  height: 200,
+                  width: "87%",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  marginTop: 30,
+                  backgroundColor: "whitesmoke",
+                  borderRadius: 20,
+                }}
+                key={index}
+              >
+                <View>
+                  {previousHotelDetail.length > 0 &&
+                    previousHotelDetail.map((hotel, index) => {
+                      return (
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            paddingHorizontal: 20,
+                            marginTop: 10,
+                          }}
+                          key={index}
+                        >
+                          <Image
+                            source={{
+                              uri: hotel.ImageUrl,
+                            }}
+                            resizeMode="contain"
+                            style={{ width: 140, height: 90, borderRadius: 15 }}
+                          />
+                          <View style={{ flexDirection: "column" }}>
+                            <Text
+                              style={{
+                                padding: 10,
+                                paddingHorizontal: 10,
+                                fontSize: 18,
+                              }}
+                            >
+                              {hotel.Name}
+                            </Text>
+                            <Text style={{ fontSize: 12, marginLeft: 10 }}>
+                              {hotel.Address}
+                            </Text>
+                            <View style={{ flexDirection: "row" }}>
+                              <Text
+                                style={{
+                                  fontSize: 13,
+                                  marginTop: 8,
+                                  marginLeft: 10,
+                                }}
+                              >
+                                ${reservation.price}{" "}
+                              </Text>
+                              <Ionicons
+                                name="star"
+                                size={18}
+                                color={"gold"}
+                                style={{ top: 6 }}
+                              />
+                              <Text
+                                style={{
+                                  fontSize: 13,
+                                  marginTop: 8,
+                                  marginLeft: 5,
+                                  color: "gold",
+                                }}
+                              >
+                                {hotel.Rating}
+                              </Text>
+                              <Text
+                                style={{
+                                  fontSize: 13,
+                                  marginTop: 8,
+                                  marginLeft: 5,
+                                }}
+                              >
+                                ({hotel.Comment} Reviews)
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                      );
+                    })}
+                  <TouchableOpacity>
+                    <View
+                      style={{
+                        alignSelf: "center",
+                        justifyContent: "space-around",
+                        height: 80,
+                        width: "90%",
+                        backgroundColor: "white",
+                        borderRadius: 20,
+                        flexDirection: "row",
+                        marginTop: 10,
+                      }}
+                    >
+                      <View style={{ flexDirection: "column" }}>
+                        <Text style={{ fontSize: 15, marginTop: 10 }}>
+                          Check In
+                        </Text>
+                        <Text style={{ fontSize: 20, marginTop: 10 }}>
+                          {reservation.checkInDate}
+                        </Text>
+                      </View>
+                      <Ionicons
+                        name="arrow-forward"
+                        size={20}
+                        style={{ alignSelf: "center" }}
+                      />
+                      <View style={{ flexDirection: "column" }}>
+                        <Text style={{ fontSize: 15, marginTop: 10 }}>
+                          Check Out
+                        </Text>
+                        <Text style={{ fontSize: 20, marginTop: 10 }}>
+                          {reservation.checkOutDate}
+                        </Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            );
+          })}
         </View>
       </ScrollView>
     </SafeAreaView>
+  ) : (
+    <ActivityIndicator size="large" color="dodgerblue" style={{ flex: 1 }} />
   );
 };
 

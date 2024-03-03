@@ -43,8 +43,11 @@ const HotelDetailScreen = ({ navigation, route }) => {
     },
   ];
   const onHandlePress = (item) => {
-    navigation.navigate("ReservationStepsRouter");
-    console.log(item.name);
+    navigation.navigate("ReservationStepsRouter", {
+      selectedHotelId: "9T0RMKsuzh4wQHZRew0r",
+      hotelName: item,
+    });
+    console.log(item);
   };
   return (
     <>
@@ -98,7 +101,7 @@ const HotelDetailScreen = ({ navigation, route }) => {
           bottom: 10,
           padding: 10,
         }}
-        onPress={onHandlePress}
+        onPress={() => onHandlePress(itemprops.name)}
       >
         <View
           style={{

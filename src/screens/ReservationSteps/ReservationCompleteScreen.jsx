@@ -15,7 +15,11 @@ import HotelImage from "../../assets/ReservationSteps/hotelImage.png";
 
 import { useTranslation } from "react-i18next";
 
-const ReservationCompleteScreen = ({ navigation }) => {
+import { saveReservation } from "../../service/ReservationStepsApi";
+
+const ReservationCompleteScreen = ({ route, navigation }) => {
+  const { reservationDetails, selectedRoom } = route.params;
+
   const { t } = useTranslation();
 
   const goBackButton = () => {
@@ -23,8 +27,14 @@ const ReservationCompleteScreen = ({ navigation }) => {
   };
 
   const completeReservation = () => {
-    alert("Reservation Completed!");
-    navigation.navigate("HomeScreen");
+    saveReservation(reservationDetails).then((response) => {
+      if (response) {
+        alert("Reservation is completed successfully");
+        navigation.navigate("HomeScreen");
+      } else {
+        alert("Reservation is not completed");
+      }
+    });
   };
 
   return (
@@ -85,18 +95,25 @@ const ReservationCompleteScreen = ({ navigation }) => {
           <Text style={styles.hotelNameText}>Beach Resort Lux</Text>
         </View>
         <View style={styles.reservationInfoContainer}>
-          <Text style={styles.reservationInfoText}>2 People</Text>
-          <Text style={styles.reservationInfoText}>Standard King Room</Text>
-          <Text style={styles.reservationInfoText}>2 days</Text>
           <Text style={styles.reservationInfoText}>
-            Jan 18 2019 to Jan 20 2019
+            {reservationDetails.numberOfGuests} People
+          </Text>
+          <Text style={styles.reservationInfoText}>{selectedRoom.type}</Text>
+          <Text style={styles.reservationInfoText}>
+            {reservationDetails.numberOfStayDate} days
+          </Text>
+          <Text style={styles.reservationInfoText}>
+            {reservationDetails.checkInDate} to{" "}
+            {reservationDetails.checkOutDate}
           </Text>
         </View>
         <View style={styles.footerHr} />
-        <Text style={styles.totalPriceText}>$1480 USD</Text>
+        <Text style={styles.totalPriceText}>
+          $ {reservationDetails.price} USD
+        </Text>
         <TouchableOpacity onPress={completeReservation}>
           <LinearGradient
-            colors={["#F8A170", "#FFCD61"]}
+            colors={["#FEC069", "#FEC069"]}
             start={{ x: 0, y: 0.5 }}
             end={{ x: 1, y: 0.5 }}
             style={styles.completeButton}

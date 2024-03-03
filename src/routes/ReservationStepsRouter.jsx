@@ -9,7 +9,7 @@ import PaymentInfoScreen from "../screens/ReservationSteps/PaymentInfoScreen";
 
 const Stack = createStackNavigator();
 
-const ReservationStepsRouter = () => {
+const ReservationStepsRouter = ({ route }) => {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -17,6 +17,10 @@ const ReservationStepsRouter = () => {
         name="SelectRoomScreen"
         component={SelectRoomScreen}
         options={{ headerShown: false }}
+        initialParams={{
+          selectedHotelId: route.params.selectedHotelId,
+          hotelName: route.params.hotelName,
+        }}
       />
       <Stack.Screen
         name="ReservationDetailScreen"
