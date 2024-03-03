@@ -43,7 +43,6 @@ export const saveReservation = async (reservationDetails) => {
 };
 
 export const getReservations = async (uId) => {
-  const userId = "82KsQwqwnRmIXmfUThQJ";
   const reservationsCollection = collection(db, "Reservation");
   const queryy = query(reservationsCollection, orderBy("checkInDate"));
   const snapshot = await getDocs(queryy);

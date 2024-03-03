@@ -85,7 +85,7 @@ const BookingsScreen = () => {
       .catch((error) => {
         console.error("Error fetching reservations:", error);
       });
-    console.log("current: ", currentHotelDetail);
+    console.log("current: ", currentHotelDetail[0]);
   }, []);
 
   return previousHotelDetail ? (

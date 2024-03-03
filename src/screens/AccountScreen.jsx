@@ -6,13 +6,18 @@ import {
   TouchableOpacity,
   Button,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { signOut } from "firebase/auth";
+import { signOut, getAuth } from "firebase/auth";
 import { auth } from "../service/firebase";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../service/firebase";
+import { use } from "i18next";
 const AccountScreen = () => {
+  const [userName, setUserName] = useState("");
+
   const navigation = useNavigation();
   function goBack() {
     navigation.goBack();
@@ -26,13 +31,34 @@ const AccountScreen = () => {
         // An error happened.
       });
   };
+
+  const auth = getAuth();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const userQuery = query(
+        collection(db, "Users"),
+        where("Email", "==", auth.currentUser.email)
+      );
+      const userSnapshot = await getDocs(userQuery);
+      let userName = "";
+      let userSurname = "";
+      userSnapshot.forEach((doc) => {
+        userName = doc.data().Name;
+        userSurname = doc.data().Surname;
+      });
+      setUserName(userName + " " + userSurname);
+    };
+    fetchUser();
+    console.log("username:" + userName);
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileHeader}>
         <TouchableOpacity>
           <Image
             source={{
-              uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSv5f0xNX70qisukW3q_1T3BDt45hdkRdDMWg&usqp=CAU",
+              uri: "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png",
             }}
             style={{ height: 70, width: 70, borderRadius: 60, marginStart: 10 }}
           />
@@ -46,7 +72,7 @@ const AccountScreen = () => {
             marginLeft: 30,
           }}
         >
-          Bergen Gergen
+          {userName}
         </Text>
       </View>
       <View
@@ -75,7 +101,9 @@ const AccountScreen = () => {
           <Text style={{ marginStart: 10, fontSize: 20 }}>Settings</Text>
         </View>
       </TouchableOpacity>
-      <Button onPress={handleLogout} title="Logout" />
+      <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+        <Text style={styles.logoutButtonText}>Log Out</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -94,5 +122,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     width: "100%",
     height: "10%",
+  },
+  logoutButton: {
+    marginTop: 20,
+    width: "80%",
+    height: 40,
+    backgroundColor: "#FEC069",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 10,
+    alignSelf: "center",
+    position: "absolute",
+    bottom: 20,
+  },
+  logoutButtonText: {
+    color: "white",
+    fontSize: 20,
   },
 });

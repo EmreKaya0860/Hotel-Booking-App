@@ -33,7 +33,7 @@ const MainRouter = () => {
             iconName = "address-book";
           } else if (route.name === "FavoritesScreen") {
             iconName = "heart";
-          } else if (route.name === "AccountScreen") {
+          } else if (route.name === "AccountCombineScreen") {
             iconName = "user";
           }
 

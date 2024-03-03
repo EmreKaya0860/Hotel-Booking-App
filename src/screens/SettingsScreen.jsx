@@ -5,13 +5,14 @@ import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 
-import firebase from "firebase/app";
-import "firebase/auth";
+import firebase from "../service/firebase";
+import { getAuth, updatePassword } from "firebase/auth";
 import "firebase/firestore";
 import "firebase/storage";
-import { Alert } from "react-native";
 
 const SettingsScreen = () => {
+  const auth = getAuth();
+  const user = auth.currentUser;
   const navigation = useNavigation();
   function goBack() {
     navigation.goBack();
@@ -43,7 +44,7 @@ const SettingsScreen = () => {
     // Firebase Storage'a resmi yükle
     const response = await fetch(uri);
     const blob = await response.blob();
-    const user = firebase.auth().currentUser;
+
     const storageRef = firebase
       .storage()
       .ref()
@@ -63,22 +64,7 @@ const SettingsScreen = () => {
     }
   };
   const changePassword = () => {
-    const user = firebase.auth().currentUser;
-    if (!user) {
-      console.error("Kullanıcı oturum açmamış.");
-      return;
-    }
-
-    user
-      .updatePassword(newPassword)
-      .then(() => {
-        console.log("Şifre başarıyla güncellendi");
-        Alert.alert("Başarılı", "Şifre başarıyla güncellendi");
-      })
-      .catch((error) => {
-        console.error("Şifre güncellenirken bir hata oluştu: ", error);
-        Alert.alert("Hata", "Şifre güncellenirken bir hata oluştu");
-      });
+    navigation.navigate("PasswordChangeScreen");
   };
 
   return (
@@ -98,7 +84,7 @@ const SettingsScreen = () => {
       <View style={styles.profileHeader}>
         <Image
           source={{
-            uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSv5f0xNX70qisukW3q_1T3BDt45hdkRdDMWg&usqp=CAU",
+            uri: "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png",
           }}
           style={{
             flexDirection: "row",
@@ -108,9 +94,6 @@ const SettingsScreen = () => {
             borderRadius: 60,
           }}
         />
-        <TouchableOpacity onPress={pickImage}>
-          <Ionicons name="create-outline" size={20} />
-        </TouchableOpacity>
       </View>
       <View
         style={{
