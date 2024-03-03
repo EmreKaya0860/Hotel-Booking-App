@@ -20,7 +20,6 @@ const Router = () => {
       setLoading(false);
       if (user) setUser(user);
       else setUser(null);
-    
     });
   }, []);
 
