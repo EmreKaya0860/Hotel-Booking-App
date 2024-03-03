@@ -42,7 +42,7 @@ const ReservationDetailScreen = ({ route, navigation }) => {
   const [checkOutDate, setcheckOutDate] = useState(new Date());
   const { t } = useTranslation();
 
-  const { selectedRoom, selectedHotelId } = route.params;
+  const { selectedRoom, selectedHotelId, userId } = route.params;
 
   const daysDifference = differenceInDays(checkOutDate, checkInDate);
 
@@ -89,6 +89,7 @@ const ReservationDetailScreen = ({ route, navigation }) => {
       onSubmit={(values) => {
         values.hotelId = selectedHotelId;
         values.roomType = selectedRoom.type;
+        values.userId = userId;
         values.price = totalPrice.toString();
         values.numberOfStayDate = daysDifference.toString();
         navigation.navigate("PaymentInfoScreen", {

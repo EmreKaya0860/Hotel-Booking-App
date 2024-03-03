@@ -20,6 +20,7 @@ const ReservationStepsRouter = ({ route }) => {
         initialParams={{
           selectedHotelId: route.params.selectedHotelId,
           hotelName: route.params.hotelName,
+          userId: route.params.userId,
         }}
       />
       <Stack.Screen

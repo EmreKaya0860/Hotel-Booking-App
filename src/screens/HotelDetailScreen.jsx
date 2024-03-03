@@ -7,7 +7,7 @@ import {
   ScrollView,
   Pressable,
 } from "react-native";
-import React,{useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { ImageGallery } from "@georstat/react-native-image-gallery";
 import Facilities from "../components/Home/Facilities";
@@ -15,9 +15,17 @@ import Overview from "../components/Home/Overview";
 import HotelLocation from "../components/Home/HotelLocation";
 import { db } from "../service/firebase";
 import { collection, onSnapshot } from "firebase/firestore";
-import { getDocs, query, where,orderBy, startAt , endAt} from "firebase/firestore";
+import {
+  getDocs,
+  query,
+  where,
+  orderBy,
+  startAt,
+  endAt,
+} from "firebase/firestore";
 const HotelDetailScreen = ({ navigation, route }) => {
-  const { selectedHotelId,hotelName,hotelId } = route.params;
+  const { selectedHotelId, hotelName, hotelId, userId } = route.params;
+
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
 
@@ -28,6 +36,7 @@ const HotelDetailScreen = ({ navigation, route }) => {
     navigation.navigate("ReservationStepsRouter", {
       selectedHotelId: selectedHotelId,
       hotelName: hotelName,
+      userId: userId,
     });
   };
   const [hotelDetails, setHotelDetails] = useState({});
@@ -40,13 +49,11 @@ const HotelDetailScreen = ({ navigation, route }) => {
   useEffect(() => {
     const fetchHotelDetails = async () => {
       try {
-   
-        const hotelsRef = collection(db, 'Hotels');
-        const q = query(hotelsRef, where('Id', '==', hotelId));
+        const hotelsRef = collection(db, "Hotels");
+        const q = query(hotelsRef, where("Id", "==", hotelId));
 
-     
         const querySnapshot = await getDocs(q);
- 
+
         let hotelDetails = {};
         let firstImage1 = "";
         let secondImage2 = "";
@@ -54,31 +61,32 @@ const HotelDetailScreen = ({ navigation, route }) => {
         let fourthImage4 = "";
         let images = [];
         querySnapshot.forEach((doc) => {
-
           hotelDetails = doc.data();
-           images = hotelDetails.ImageGallery; 
-           console.log(images);
+          images = hotelDetails.ImageGallery;
+          console.log(images);
           firstImage1 = hotelDetails.ImageUrl;
           secondImage2 = images[0].url;
           thirdImage3 = images[1].url;
           fourthImage4 = images[2].url;
         });
-       
+
         setHotelDetails(hotelDetails);
         setFirstImage(firstImage1);
         setSecondImage(secondImage2);
         setThirdImage(thirdImage3);
         setFourthImage(fourthImage4);
-  
+
         setLatitude(hotelDetails.HotelLocation.latitude);
         setLongitude(hotelDetails.HotelLocation.longitude);
       } catch (error) {
-        console.error('Error fetching hotel details:', error);
+        console.error("Error fetching hotel details:", error);
       }
     };
 
-     fetchHotelDetails();
-  }, [hotelId]); 
+    fetchHotelDetails();
+
+    console.log("hotelId", hotelId);
+  }, [hotelId]);
 
   return (
     <>
@@ -88,13 +96,12 @@ const HotelDetailScreen = ({ navigation, route }) => {
             <Ionicons name="chevron-back-outline" size={30} color="white" />
           </TouchableOpacity>
           <Text style={styles.hotelName}>{hotelDetails.Name}</Text>
-         
         </View>
         <View>
-        <Image source={{ uri: firstImage }} style={styles.image} /> 
+          <Image source={{ uri: firstImage }} style={styles.image} />
           <View style={{ flexDirection: "row" }}>
             <Image source={{ uri: secondImage }} style={styles.image2} />
-            <Image source={{ uri: thirdImage }} style={styles.image3} /> 
+            <Image source={{ uri: thirdImage }} style={styles.image3} />
 
             <View
               style={{
@@ -103,7 +110,7 @@ const HotelDetailScreen = ({ navigation, route }) => {
                 borderBottomRightRadius: 16,
               }}
             >
-              <Image source={{ uri: fourthImage }} style={styles.image4} /> 
+              <Image source={{ uri: fourthImage }} style={styles.image4} />
               <TouchableOpacity
                 onPress={openGallery}
                 style={styles.transparentOverlay}
@@ -113,11 +120,15 @@ const HotelDetailScreen = ({ navigation, route }) => {
             </View>
           </View>
         </View>
-        <ImageGallery close={closeGallery} isOpen={isOpen} images={hotelDetails.ImageGallery} />
+        <ImageGallery
+          close={closeGallery}
+          isOpen={isOpen}
+          images={hotelDetails.ImageGallery}
+        />
         <Facilities></Facilities>
         <Overview text={hotelDetails.OverView}></Overview>
         <HotelLocation
-          latitude= {latitude}
+          latitude={latitude}
           longitude={longitude}
         ></HotelLocation>
       </ScrollView>
@@ -132,7 +143,7 @@ const HotelDetailScreen = ({ navigation, route }) => {
           bottom: 10,
           padding: 10,
         }}
-        onPress={() => onHandlePress(itemprops.name)}
+        onPress={() => onHandlePress()}
       >
         <View
           style={{
@@ -149,7 +160,7 @@ const HotelDetailScreen = ({ navigation, route }) => {
             Select Room
           </Text>
         </View>
-      </Pressable> 
+      </Pressable>
     </>
   );
 };
@@ -173,7 +184,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   hotelName: {
-    flex: 1, textAlign: 'center',
+    flex: 1,
+    textAlign: "center",
     color: "white",
     fontSize: 24,
     fontWeight: "bold",

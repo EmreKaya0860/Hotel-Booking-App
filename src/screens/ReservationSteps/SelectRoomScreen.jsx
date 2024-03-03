@@ -21,7 +21,7 @@ const SelectRoomScreen = ({ route, navigation }) => {
   const [status, setStatus] = useState("loading");
   const [roomsInfos, setRoomsInfos] = useState([]);
 
-  const { selectedHotelId, hotelName } = route.params;
+  const { selectedHotelId, hotelName, userId } = route.params;
 
   const goBackButton = () => {
     navigation.goBack();
@@ -39,6 +39,7 @@ const SelectRoomScreen = ({ route, navigation }) => {
     navigation.navigate("ReservationDetailScreen", {
       selectedRoom: room,
       selectedHotelId: selectedHotelId,
+      userId: userId,
     });
   };
 

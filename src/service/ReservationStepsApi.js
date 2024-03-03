@@ -42,13 +42,13 @@ export const saveReservation = async (reservationDetails) => {
   return true;
 };
 
-export const getReservations = async () => {
+export const getReservations = async (uId) => {
   const userId = "82KsQwqwnRmIXmfUThQJ";
   const reservationsCollection = collection(db, "Reservation");
   const queryy = query(reservationsCollection, orderBy("checkInDate"));
   const snapshot = await getDocs(queryy);
   const reservations = snapshot.docs
-    .filter((doc) => doc.data().userId === userId)
+    .filter((doc) => doc.data().userId === uId)
     .map((doc) => doc.data());
   return reservations;
 };

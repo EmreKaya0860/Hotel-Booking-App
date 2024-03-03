@@ -13,6 +13,8 @@ import { ScrollView } from "react-native-gesture-handler";
 
 import { getReservations, getHotelById } from "../service/ReservationStepsApi";
 
+import { auth, firestore } from "../service/firebase";
+
 const BookingsScreen = () => {
   const [tab, setTab] = useState(1);
   const [reservations, setReservations] = useState([]);
@@ -21,8 +23,12 @@ const BookingsScreen = () => {
   const [currentReservations, setCurrentReservations] = useState([]);
   const [currentHotelDetail, setCurrentHotelDetail] = useState([]);
 
+  const user = auth.currentUser;
+
+  console.log("user: ", user.uid);
+
   useEffect(() => {
-    getReservations()
+    getReservations(user.uid)
       .then((reservations) => {
         setReservations(reservations);
         const currentDate = new Date();
