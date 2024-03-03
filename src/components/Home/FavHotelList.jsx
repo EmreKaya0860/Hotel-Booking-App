@@ -1,79 +1,133 @@
 import { StyleSheet, Text, View ,FlatList,Image, TouchableOpacity, Pressable} from 'react-native'
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import { AntDesign } from '@expo/vector-icons';
+import { db } from "../../service/firebase";
+import { collection, onSnapshot } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { useNavigation } from '@react-navigation/native';
+import { getDocs, query, where,orderBy, startAt , endAt,doc, updateDoc} from "firebase/firestore";
 const FavHotelList = ({onPress,onLike}) => {
-    const DATA = [
-   
-        {
-          id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-          title: 'Second Item',
-          name:"Lux Hotel with Pool",
-          url:"https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGhvdGVsfGVufDB8fDB8fHww",
-          city:"Dubai",
-          price:"$200",
-          rating:"4.1",
-          comment:"532",
-          address:"Chestnut StreesRome, NY",
-          latitude: 40.7128,
-          longitude: -74.0060,
-          liked:true
-        },
-        {
-          id: '58694as0f-3da1-471f-bd96-145571e29d72',
-          title: 'Third Item',
-          url:"https://images.unsplash.com/photo-1596436889106-be35e843f974?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTF8fGhvdGVsfGVufDB8fDB8fHww",
-          name:"Lux Hotel with Pool",
-          city:"Dubai",
-          price:"$200",
-          rating:"4.8",
-          comment:"532",
-          address:"Chestnut StreesRome, NY",
-          latitude: 40.7128,
-          longitude: -74.0060,
-          liked:true
-        },
-        {
-          id: '58694a0f-3da1-471f-bkdd96-145571e29d72',
-          title: 'Third Item',
-          url:"https://images.unsplash.com/photo-1596436889106-be35e843f974?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTF8fGhvdGVsfGVufDB8fDB8fHww",
-          name:"Lux Hotel with Pool",
-          city:"Dubai",
-          price:"$200",
-          rating:"4.8",
-          comment:"532",
-          address:"Chestnut StreesRome, NY",
-          latitude: 40.7128,
-          longitude: -74.0060,
-          liked:true
-        },
-      ];
-   
-      const renderItem = ({ item, index }) => (
+  const [hotels, setHotels] = useState([]);
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const userEmail=user.email;
+  const navigation = useNavigation();
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', fetchLikedHotels);
+
+    return unsubscribe;
+
+  }, [userEmail,navigation]);
+
+  const fetchLikedHotels = async () => {
+    try {
+     
+      const userQuery = query(collection(db, 'Users'), where('Email', '==', userEmail));
+      const userSnapshot = await getDocs(userQuery);
+
+      let likedHotels = [];
+      userSnapshot.forEach((doc) => {
+        
+        likedHotels = doc.data().LikedHotels || [];
+      });
+
+    
+      const hotelQuery = collection(db, 'Hotels');
+      const hotelSnapshot = await getDocs(hotelQuery);
+
+      let hotelList = [];
+      hotelSnapshot.forEach((doc) => {
+        const hotelData = doc.data();
+        const hotelId = doc.id;
+
        
-        <View  style={styles.container} >
-          <View style={styles.imageContainer}>
-           <TouchableOpacity onPress={() => onPress(item)}> 
-           <Image source={{ uri: item.url }} style={styles.image} />
-           </TouchableOpacity> 
-           <Pressable style={styles.icon} onPress={() => onLike(item)}>
-           <AntDesign  name="heart" size={24}  color={item.liked ? '#D80032' : 'white'} />
-           </Pressable>
+        const isLiked = likedHotels.includes(hotelId);
+
+        if (isLiked) {
+          const hotelWithLikedStatus = { ...hotelData, DocId: hotelId, Liked: isLiked };
+          hotelList.push(hotelWithLikedStatus);
+        }
+      
+      });
+
+   
+      setHotels(hotelList);
+    
+    } catch (error) {
+      console.error('Error fetching liked hotels:', error);
+    }
+  };
+  const handleLike = async (item) => {
+    try {
+
+      const userQuery = query(collection(db, 'Users'), where('Email', '==', userEmail));
+      const userSnapshot = await getDocs(userQuery);
+  
+      userSnapshot.docs.forEach((doc) => {
+        const userData = doc.data();
+        if (userData.Email === userEmail) {
+          
+          const userId = doc.id;
+        
+          const likedHotels = userData.LikedHotels || [];
+      
+         
+          if (likedHotels.includes(item.DocId)) {
+          
+            const updatedLikedHotels = likedHotels.filter((hotelId) => hotelId !== item.DocId);
+       
+            updateLikedHotels(userId, updatedLikedHotels);
+
+          } else {
+         
+            const updatedLikedHotels = [...likedHotels, item.DocId];
            
-            </View>
-            <View style={styles.textContainer}>
-            <Text>
-            <AntDesign name="star" size={16} color="gold" />{" "}
-              <Text style={styles.rating}>{item.rating}</Text> <Text style={styles.generaltext}>({item.comment})</Text>
-              </Text>
-              <Text style={styles.hotelname}>{item.name}</Text>
-              <Text style={styles.generaltext}>{item.address}</Text>
-              <Text style={styles.price}>{item.price}</Text>
-            </View>         
-            </View>
-      );
+            updateLikedHotels(userId, updatedLikedHotels);
+          }
+        }
+      });
+      fetchLikedHotels();
+    } catch (error) {
+      console.error('Error updating liked hotels:', error);
+    }
+  };
+  const updateLikedHotels = async (userId, updatedLikedHotels) => {
+    try {
+      const userRef = doc(db, 'Users', userId);
+      await updateDoc(userRef,{ LikedHotels: updatedLikedHotels });
+      // console.log("Liked hotels updated successfully!");
+    } catch (error) {
+      console.error('Error updating liked hotels:', error);
+    }
+  };
+  
+   
+  const renderItem = ({ item, index }) => (
+       
+    <View  style={styles.container} >
+    <View style={styles.imageContainer}>
+     <TouchableOpacity onPress={() =>onHandlePress(item.Id)}> 
+     <Image source={{ uri: item.ImageUrl }} style={styles.image} />
+     </TouchableOpacity> 
+     <Pressable style={styles.icon} onPress={() => handleLike(item)}>
+     <AntDesign  name="heart" size={24}  color={item.Liked ? '#D80032' : 'white'} />
+     </Pressable>
+     
+      </View>
+      <View style={styles.textContainer}>
+      <Text>
+      <AntDesign name="star" size={16} color="gold" />{" "}
+        <Text style={styles.rating}>{item.Rating}</Text> <Text style={styles.generaltext}>({item.Comment})</Text>
+        </Text>
+        <Text style={styles.hotelname}>{item.Name}</Text>
+        <Text style={styles.generaltext}>{item.Address}</Text>
+        <Text style={styles.price}>{item.Price}</Text>
+      </View>         
+      </View>
+  ); 
       return (
         <FlatList
-        data={DATA}
+        data={hotels}
         numColumns={2}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}

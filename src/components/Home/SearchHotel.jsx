@@ -1,7 +1,11 @@
 import { StyleSheet, TextInput, View ,TouchableOpacity} from 'react-native'
 import React from 'react'
 import { AntDesign } from '@expo/vector-icons';
-const SearchHotel = () => {
+const SearchHotel = ({onSearchHotel}) => {
+  const handleSearchHotel = (text) => {
+    onSearchHotel(text);
+   
+  }
   return (
     <View style={styles.container}>
 
@@ -10,6 +14,7 @@ const SearchHotel = () => {
     style={styles.searchHotel}
      placeholder="Find a hotel"
      placeholderStyle={styles.placeholderStyle}
+      onChangeText={handleSearchHotel}
     ></TextInput>
     </View>
   )

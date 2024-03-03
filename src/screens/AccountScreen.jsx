@@ -1,15 +1,22 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity,Button } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-
+import { signOut } from "firebase/auth";
+import { auth } from "../service/firebase";
 const AccountScreen = () => {
   const navigation = useNavigation();
   function goBack() {
     navigation.goBack();
   }
-
+const handleLogout = () => {
+  signOut(auth).then(() => {
+    // Sign-out successful.
+  }).catch((error) => {
+    // An error happened.
+  });
+}
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileHeader}>
@@ -86,6 +93,7 @@ const AccountScreen = () => {
           <Text style={{ marginStart: 10, fontSize: 20 }}>Settings</Text>
         </View>
       </TouchableOpacity>
+      <Button onPress={handleLogout} title="Logout"/>
     </SafeAreaView>
   );
 };

@@ -28,8 +28,8 @@ const HotelLocation = ({ latitude, longitude }) => {
         {coordinate && (
           <Marker
             coordinate={coordinate}
-            title="İstanbul"
-            description="Türkiye'nin en güzel şehri"
+            title="You are Here!"
+           
           >
             <Image
               source={require("../../../assets/rec.png")}
@@ -44,8 +44,8 @@ const HotelLocation = ({ latitude, longitude }) => {
             latitude: latitude,
             longitude: longitude,
           }}
-          title="{marker.title}"
-          description="{marker.description}"
+          title="Hotel Location!"
+        
         >
           <Image
             source={require("../../../assets/locationpin.png")}

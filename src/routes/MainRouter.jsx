@@ -24,7 +24,7 @@ const MainRouter = () => {
         tabBarShowLabel: false,
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-          const currentColor = focused ? "#37B5B6" : "#B4B4B8";
+          const currentColor = focused ? "#FEC069" : "#B4B4B8";
           if (route.name === "HomeRoutes") {
             iconName = "home";
             size = 30;

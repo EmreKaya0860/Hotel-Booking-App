@@ -7,48 +7,79 @@ import {
   ScrollView,
   Pressable,
 } from "react-native";
-import React from "react";
+import React,{useState,useEffect} from "react";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { ImageGallery } from "@georstat/react-native-image-gallery";
-import { useState } from "react";
 import Facilities from "../components/Home/Facilities";
 import Overview from "../components/Home/Overview";
 import HotelLocation from "../components/Home/HotelLocation";
-
+import { db } from "../service/firebase";
+import { collection, onSnapshot } from "firebase/firestore";
+import { getDocs, query, where,orderBy, startAt , endAt} from "firebase/firestore";
 const HotelDetailScreen = ({ navigation, route }) => {
-  const { itemprops } = route.params;
+  const { selectedHotelId,hotelName,hotelId } = route.params;
+  const [latitude, setLatitude] = useState(0);
+  const [longitude, setLongitude] = useState(0);
+
   const [isOpen, setIsOpen] = useState(false);
   const openGallery = () => setIsOpen(true);
   const closeGallery = () => setIsOpen(false);
-  const images = [
-    {
-      id: 1,
-      url: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    },
-    {
-      id: 2,
-      url: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGhvdGVsfGVufDB8fDB8fHww",
-    },
-    {
-      id: 3,
-      url: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDJ8fGx1eHVyeSUyMGhvdGVsfGVufDB8fDB8fHww",
-    },
-    {
-      id: 4,
-      url: "https://images.unsplash.com/photo-1582533401888-825fb21aedf1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nzh8fGx1eHVyeSUyMGhvdGVsfGVufDB8fDB8fHww",
-    },
-    {
-      id: 5,
-      url: "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjJ8fGhvdGVsfGVufDB8fDB8fHww",
-    },
-  ];
-  const onHandlePress = (item) => {
+  const onHandlePress = () => {
     navigation.navigate("ReservationStepsRouter", {
-      selectedHotelId: "9T0RMKsuzh4wQHZRew0r",
-      hotelName: item,
+      selectedHotelId: selectedHotelId,
+      hotelName: hotelName,
     });
-    console.log(item);
   };
+  const [hotelDetails, setHotelDetails] = useState({});
+
+  const [firstImage, setFirstImage] = useState("");
+  const [secondImage, setSecondImage] = useState("");
+  const [thirdImage, setThirdImage] = useState("");
+  const [fourthImage, setFourthImage] = useState("");
+
+  useEffect(() => {
+    const fetchHotelDetails = async () => {
+      try {
+   
+        const hotelsRef = collection(db, 'Hotels');
+        const q = query(hotelsRef, where('Id', '==', hotelId));
+
+     
+        const querySnapshot = await getDocs(q);
+ 
+        let hotelDetails = {};
+        let firstImage1 = "";
+        let secondImage2 = "";
+        let thirdImage3 = "";
+        let fourthImage4 = "";
+        let images = [];
+        querySnapshot.forEach((doc) => {
+
+          hotelDetails = doc.data();
+           images = hotelDetails.ImageGallery; 
+           console.log(images);
+          firstImage1 = hotelDetails.ImageUrl;
+          secondImage2 = images[0].url;
+          thirdImage3 = images[1].url;
+          fourthImage4 = images[2].url;
+        });
+       
+        setHotelDetails(hotelDetails);
+        setFirstImage(firstImage1);
+        setSecondImage(secondImage2);
+        setThirdImage(thirdImage3);
+        setFourthImage(fourthImage4);
+  
+        setLatitude(hotelDetails.HotelLocation.latitude);
+        setLongitude(hotelDetails.HotelLocation.longitude);
+      } catch (error) {
+        console.error('Error fetching hotel details:', error);
+      }
+    };
+
+     fetchHotelDetails();
+  }, [hotelId]); 
+
   return (
     <>
       <ScrollView style={styles.container}>
@@ -56,14 +87,14 @@ const HotelDetailScreen = ({ navigation, route }) => {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="chevron-back-outline" size={30} color="white" />
           </TouchableOpacity>
-          <Text style={styles.hotelName}>{itemprops.name}</Text>
-          <AntDesign name="hearto" size={24} color="white" />
+          <Text style={styles.hotelName}>{hotelDetails.Name}</Text>
+         
         </View>
         <View>
-          <Image source={{ uri: itemprops.url }} style={styles.image} />
+        <Image source={{ uri: firstImage }} style={styles.image} /> 
           <View style={{ flexDirection: "row" }}>
-            <Image source={{ uri: itemprops.url }} style={styles.image2} />
-            <Image source={{ uri: itemprops.url }} style={styles.image3} />
+            <Image source={{ uri: secondImage }} style={styles.image2} />
+            <Image source={{ uri: thirdImage }} style={styles.image3} /> 
 
             <View
               style={{
@@ -72,7 +103,7 @@ const HotelDetailScreen = ({ navigation, route }) => {
                 borderBottomRightRadius: 16,
               }}
             >
-              <Image source={{ uri: itemprops.url }} style={styles.image4} />
+              <Image source={{ uri: fourthImage }} style={styles.image4} /> 
               <TouchableOpacity
                 onPress={openGallery}
                 style={styles.transparentOverlay}
@@ -82,12 +113,12 @@ const HotelDetailScreen = ({ navigation, route }) => {
             </View>
           </View>
         </View>
-        <ImageGallery close={closeGallery} isOpen={isOpen} images={images} />
+        <ImageGallery close={closeGallery} isOpen={isOpen} images={hotelDetails.ImageGallery} />
         <Facilities></Facilities>
-        <Overview></Overview>
+        <Overview text={hotelDetails.OverView}></Overview>
         <HotelLocation
-          latitude={itemprops.latitude}
-          longitude={itemprops.longitude}
+          latitude= {latitude}
+          longitude={longitude}
         ></HotelLocation>
       </ScrollView>
       <Pressable
@@ -105,7 +136,7 @@ const HotelDetailScreen = ({ navigation, route }) => {
       >
         <View
           style={{
-            backgroundColor: "#37B5B6",
+            backgroundColor: "#FEC069",
             width: "100%",
             height: 50,
             justifyContent: "center",
@@ -118,7 +149,7 @@ const HotelDetailScreen = ({ navigation, route }) => {
             Select Room
           </Text>
         </View>
-      </Pressable>
+      </Pressable> 
     </>
   );
 };
@@ -135,12 +166,14 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
+    textAlign: "center",
     alignItems: "center",
     top: 60,
     zIndex: 100,
     paddingHorizontal: 20,
   },
   hotelName: {
+    flex: 1, textAlign: 'center',
     color: "white",
     fontSize: 24,
     fontWeight: "bold",
@@ -167,7 +200,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: "33.5%",
     height: "100%",
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "rgba(0,0,0,0.2)",
     justifyContent: "center",
     alignItems: "center",
     borderBottomRightRadius: 16,

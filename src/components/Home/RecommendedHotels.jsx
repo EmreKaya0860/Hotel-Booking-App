@@ -1,40 +1,44 @@
-import { StyleSheet, Text, View ,FlatList,Image} from 'react-native'
+import { StyleSheet, Text, View ,FlatList,Image, TouchableOpacity} from 'react-native'
 import React from 'react'
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
 const RecommendedHotels = () => {
   const DATA = [
     {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      title: 'First Item',
-      url:"https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTJ8fGhvdGVsfGVufDB8fDB8fHww",
-      name:"Lux Hotel with Pool",
-      city:"Dubai",
-      price:"$200",
-      rating:"4.5"
+      id:"5",
+      docId: 'q2Wnpc0PYxpRUMVQCJcy',
+      title: 'Four Seasons Resort',
+      url:"https://i.hizliresim.com/sn68mom.",
+      name:"Four Seasons Resort",
+      city:"Bora Bora",
+      price:"6.250₺",
+      rating:"4.1"
     },
     {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+      id:"4",
+      docId: 'cBDoZi45RaRJSFDy1hsu',
       title: 'Second Item',
-      name:"Lux Hotel with Pool",
-      url:"https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGhvdGVsfGVufDB8fDB8fHww",
+      name:"Burj Al Arab",
+      url:"https://i.hizliresim.com/rz8ggkd.",
       city:"Dubai",
-      price:"$200",
-      rating:"4.5"
+      price:"18.837₺",
+      rating:"3.6"
     },
     {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
+      id:"1",
+      docId: '58694a0f-3da1-471f-bd96-145571e29d72',
       title: 'Third Item',
-      url:"https://images.unsplash.com/photo-1596436889106-be35e843f974?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTF8fGhvdGVsfGVufDB8fDB8fHww",
-      name:"Lux Hotel with Pool",
-      city:"Dubai",
-      price:"$200",
-      rating:"4.5"
+      url:"https://i.hizliresim.com/54gjpmt.",
+      name:"CuisinArt Golf Resort ",
+      city:"Anguilla",
+      price:"9.000₺",
+      rating:"3.8"
     },
   ];
-  
+
   const renderItem = ({ item, index }) => (
-    <View style={styles.container}>
+    <View style={styles.container} >
+    <View >
       <View style={styles.imageContainer}>
         <Image source={{ uri: item.url }} style={styles.image} />
         <View style={styles.textContainer}>
@@ -61,6 +65,7 @@ const RecommendedHotels = () => {
         
       </View>
 
+    </View>
     </View>
   );
   return (

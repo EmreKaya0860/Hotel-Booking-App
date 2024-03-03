@@ -1,14 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const Overview = () => {
+const Overview = ({text}) => {
   return (
     <View>
       <Text style={styles.header}>Overview</Text>
-      <Text  style={styles.overview}>Discover our hotel's 
-        prime location, stylish accommodations, 
-        and exceptional service. Experience comfort
-         and convenience at its finest during your stay with us.</Text>
+      <Text  style={styles.overview}>{text}</Text>
     </View>
   )
 }

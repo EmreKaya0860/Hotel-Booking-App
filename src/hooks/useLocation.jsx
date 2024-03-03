@@ -4,17 +4,16 @@ function useLocation() {
   const [location, setLocation] = useState(null);
   useEffect(() => {
     Location.requestForegroundPermissionsAsync().then((permission) => {
-      //console.log(permission);
-      //izin vermediyse return
+   
       if (permission.status !== "granted") {
         return;
       }
-      //izin verdiyse konum bilgisini al
+  
       Location.getCurrentPositionAsync().then((location) => {
         setLocation(location);
       });
       Location.watchPositionAsync(
-        //konum değiştiğinde güncelle
+       
         {
           accuracy: Location.Accuracy.BestForNavigation,
           timeInterval: 5000,
