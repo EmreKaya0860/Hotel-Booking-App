@@ -7,6 +7,7 @@ import BookingsScreen from "../screens/BookingsScreen";
 import FavoritesScreen from "../screens/FavoritesScreen";
 import AccountScreen from "../screens/AccountScreen";
 import HomeRoutes from "./HomeRoutes";
+import CombineAcountAndSettingsRouter from "./CombineAcountAndSettingsRouter";
 
 import { FontAwesome } from "@expo/vector-icons";
 
@@ -45,7 +46,10 @@ const MainRouter = () => {
       <Tab.Screen name="HomeRoutes" component={HomeRoutes} />
       <Tab.Screen name="BookingsScreen" component={BookingsScreen} />
       <Tab.Screen name="FavoritesScreen" component={FavoritesScreen} />
-      <Tab.Screen name="AccountScreen" component={AccountScreen} />
+      <Tab.Screen
+        name="AccountCombineScreen"
+        component={CombineAcountAndSettingsRouter}
+      />
     </Tab.Navigator>
   );
 };

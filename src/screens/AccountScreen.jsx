@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity,Button } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Button,
+} from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
@@ -10,13 +17,15 @@ const AccountScreen = () => {
   function goBack() {
     navigation.goBack();
   }
-const handleLogout = () => {
-  signOut(auth).then(() => {
-    // Sign-out successful.
-  }).catch((error) => {
-    // An error happened.
-  });
-}
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful.
+      })
+      .catch((error) => {
+        // An error happened.
+      });
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileHeader}>
@@ -58,34 +67,7 @@ const handleLogout = () => {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity>
-        <View
-          style={{ flexDirection: "row", paddingHorizontal: 20, marginTop: 25 }}
-        >
-          <Ionicons name="card-outline" size={30} color={"#FFA751"} />
-          <Text style={{ marginStart: 10, fontSize: 20 }}>Payment</Text>
-        </View>
-      </TouchableOpacity>
-
-      <TouchableOpacity>
-        <View
-          style={{ flexDirection: "row", paddingHorizontal: 20, marginTop: 30 }}
-        >
-          <Ionicons name="help-buoy" size={30} color={"#FFA751"} />
-          <Text style={{ marginStart: 10, fontSize: 20 }}>Help</Text>
-        </View>
-      </TouchableOpacity>
-
-      <TouchableOpacity>
-        <View
-          style={{ flexDirection: "row", paddingHorizontal: 20, marginTop: 30 }}
-        >
-          <FontAwesome5 name="piggy-bank" size={25} color={"#FFA751"} />
-          <Text style={{ marginStart: 10, fontSize: 20 }}>Promotions</Text>
-        </View>
-      </TouchableOpacity>
-
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("SettingsScreen")}>
         <View
           style={{ flexDirection: "row", paddingHorizontal: 20, marginTop: 30 }}
         >
@@ -93,7 +75,7 @@ const handleLogout = () => {
           <Text style={{ marginStart: 10, fontSize: 20 }}>Settings</Text>
         </View>
       </TouchableOpacity>
-      <Button onPress={handleLogout} title="Logout"/>
+      <Button onPress={handleLogout} title="Logout" />
     </SafeAreaView>
   );
 };
